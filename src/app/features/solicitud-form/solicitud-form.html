@@ -1,0 +1,124 @@
+<div class="pagina">
+  <div class="contenedor">
+    <header class="encabezado">
+      <span class="etiqueta">ATENCIÓN TÉCNICA</span>
+      <h1>Solicitud de Servicios Técnicos</h1>
+      <p>
+        Completa el formulario y nuestro equipo se pondrá
+        en contacto contigo para atender tu requerimiento.
+      </p>
+    </header>
+
+    <form [formGroup]="solicitudForm" (ngSubmit)="enviarSolicitud()">
+
+      <div class="campo">
+        <label for="nombre">Nombre del cliente *</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Ingresa tu nombre completo"
+        />
+
+        @if (solicitudForm.get('nombre')?.touched &&
+             solicitudForm.get('nombre')?.invalid) {
+          <small class="error">
+            @if (solicitudForm.get('nombre')?.hasError('required')) {
+              El nombre es obligatorio.
+            } @else if (solicitudForm.get('nombre')?.hasError('minlength')) {
+              El nombre debe tener al menos 3 caracteres.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="correo">Correo electrónico *</label>
+        <input
+          id="correo"
+          type="email"
+          formControlName="correo"
+          placeholder="ejemplo@correo.com"
+        />
+
+        @if (solicitudForm.get('correo')?.touched &&
+             solicitudForm.get('correo')?.invalid) {
+          <small class="error">
+            @if (solicitudForm.get('correo')?.hasError('required')) {
+              El correo es obligatorio.
+            } @else if (solicitudForm.get('correo')?.hasError('email')) {
+              Ingresa un correo electrónico válido.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono *</label>
+        <input
+          id="telefono"
+          type="tel"
+          formControlName="telefono"
+          maxlength="9"
+          placeholder="Ejemplo: 987654321"
+        />
+
+        @if (solicitudForm.get('telefono')?.touched &&
+             solicitudForm.get('telefono')?.invalid) {
+          <small class="error">
+            @if (solicitudForm.get('telefono')?.hasError('required')) {
+              El teléfono es obligatorio.
+            } @else if (solicitudForm.get('telefono')?.hasError('pattern')) {
+              El teléfono debe contener exactamente 9 dígitos.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="servicio">Tipo de servicio *</label>
+        <select id="servicio" formControlName="servicio">
+          <option value="">Selecciona un servicio</option>
+          @for (servicio of servicios; track servicio) {
+            <option [value]="servicio">{{ servicio }}</option>
+          }
+        </select>
+
+        @if (solicitudForm.get('servicio')?.touched &&
+             solicitudForm.get('servicio')?.invalid) {
+          <small class="error">
+            Debes seleccionar un tipo de servicio.
+          </small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="descripcion">Descripción del requerimiento *</label>
+        <textarea
+          id="descripcion"
+          rows="4"
+          formControlName="descripcion"
+          placeholder="Describe el servicio que necesitas..."
+        ></textarea>
+
+        @if (solicitudForm.get('descripcion')?.touched &&
+             solicitudForm.get('descripcion')?.invalid) {
+          <small class="error">
+            @if (solicitudForm.get('descripcion')?.hasError('required')) {
+              La descripción es obligatoria.
+            } @else if (solicitudForm.get('descripcion')?.hasError('minlength')) {
+              Escribe al menos 10 caracteres.
+            }
+          </small>
+        }
+      </div>
+
+      <button type="submit">
+        Enviar solicitud
+      </button>
+
+      <p class="nota">* Todos los campos son obligatorios.</p>
+
+    </form>
+  </div>
+</div>
