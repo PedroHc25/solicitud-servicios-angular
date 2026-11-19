@@ -1,0 +1,147 @@
+
+/* CONTENEDOR GENERAL */
+.pagina {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #eaf2f8, #dce8f5);
+  font-family: Arial, sans-serif;
+}
+
+/* TARJETA DEL FORMULARIO */
+.contenedor {
+  width: 100%;
+  max-width: 650px;
+  padding: 38px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 35px rgba(15, 40, 75, 0.12);
+}
+
+/* ENCABEZADO */
+.encabezado {
+  margin-bottom: 30px;
+}
+
+.etiqueta {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  color: #0878c9;
+  background-color: #e5f3ff;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.encabezado h1 {
+  margin: 0 0 12px;
+  color: #12304f;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.encabezado p {
+  margin: 0;
+  color: #66788a;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* CAMPOS */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 21px;
+}
+
+.campo label {
+  margin-bottom: 9px;
+  color: #263d55;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d5dfeb;
+  border-radius: 8px;
+  background-color: #fbfdff;
+  color: #263d55;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: #1685d5;
+  box-shadow: 0 0 0 3px rgba(22, 133, 213, 0.12);
+}
+
+.campo textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+/* MENSAJES DE ERROR */
+.error {
+  margin-top: 7px;
+  color: #dc3545;
+  font-size: 12px;
+}
+
+/* BOTÓN */
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1267a5;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #0c4f83;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* NOTA INFORMATIVA */
+.nota {
+  margin: 16px 0 0;
+  color: #8190a0;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* DISEÑO RESPONSIVE */
+@media (max-width: 600px) {
+  .pagina {
+    padding: 20px 12px;
+  }
+
+  .contenedor {
+    padding: 25px 20px;
+  }
+
+  .encabezado h1 {
+    font-size: 23px;
+  }
+}
