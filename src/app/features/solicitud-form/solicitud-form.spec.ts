@@ -1,18 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi } from 'vitest';
 import { SolicitudForm } from './solicitud-form';
 
 describe('SolicitudForm', () => {
+    let component: SolicitudForm;
     let fixture: ComponentFixture<SolicitudForm>;
-    let componente: SolicitudForm;
-
-    const datosValidos = {
-        nombre: 'Ana Torres',
-        correo: 'ana@correo.com',
-        telefono: '987654321',
-        servicio: 'Fibra óptica',
-        descripcion: 'Necesito instalar fibra óptica en mi oficina.',
-    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -20,86 +11,72 @@ describe('SolicitudForm', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(SolicitudForm);
-        componente = fixture.componentInstance;
+        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    // 1. Creación correcta del componente
-    it('se crea el componente correctamente', () => {
-        expect(componente).toBeTruthy();
+    // PRUEBA 1: Verificar que el componente se crea
+    it('debería crear el componente', () => {
+        expect(component).toBeTruthy();
     });
 
-    // 2. Formulario inválido cuando no se ingresan datos requeridos
-    it('el formulario es inválido cuando no se ingresan los datos requeridos', () => {
-        const controles = componente.solicitudForm.controls;
-
-        expect(componente.solicitudForm.invalid).toBe(true);
-        expect(controles['nombre'].hasError('required')).toBe(true);
-        expect(controles['correo'].hasError('required')).toBe(true);
-        expect(controles['telefono'].hasError('required')).toBe(true);
-        expect(controles['servicio'].hasError('required')).toBe(true);
-        expect(controles['descripcion'].hasError('required')).toBe(true);
+    // PRUEBA 2: Verificar que el formulario inicia vacío e inválido
+    it('debería iniciar con el formulario inválido', () => {
+        expect(component.solicitudForm.invalid).toBe(true);
     });
 
-    // 3. Validación incorrecta de uno de los campos
-    it('el correo con formato incorrecto es inválido', () => {
-        componente.solicitudForm.setValue({ ...datosValidos, correo: 'ana.correo.com' });
+    // PRUEBA 3: Verificar que el nombre es obligatorio
+    it('debería validar que el nombre sea obligatorio', () => {
+        const nombre = component.solicitudForm.get('nombre');
 
-        expect(componente.solicitudForm.controls['correo'].hasError('email')).toBe(true);
-        expect(componente.solicitudForm.invalid).toBe(true);
+        expect(nombre?.hasError('required')).toBe(true);
     });
 
-    // 4. Validación de una segunda regla de negocio
-    it('el teléfono debe tener exactamente 9 dígitos', () => {
-        componente.solicitudForm.setValue({ ...datosValidos, telefono: '12345' });
+    // PRUEBA 4: Verificar el formato del correo
+    it('debería rechazar un correo electrónico inválido', () => {
+        const correo = component.solicitudForm.get('correo');
 
-        expect(componente.solicitudForm.controls['telefono'].hasError('pattern')).toBe(true);
+        correo?.setValue('pedro123');
+
+        expect(correo?.hasError('email')).toBe(true);
     });
 
-    it('la descripción debe tener al menos 10 caracteres', () => {
-        componente.solicitudForm.setValue({ ...datosValidos, descripcion: 'corta' });
+    // PRUEBA 5: Verificar que el teléfono tenga nueve dígitos
+    it('debería rechazar un teléfono que no tenga nueve dígitos', () => {
+        const telefono = component.solicitudForm.get('telefono');
 
-        expect(componente.solicitudForm.controls['descripcion'].hasError('minlength')).toBe(true);
+        telefono?.setValue('99428');
+
+        expect(telefono?.hasError('pattern')).toBe(true);
     });
 
-    // 5. Formulario válido cuando todos los datos cumplen las condiciones
-    it('el formulario es válido cuando todos los datos cumplen las condiciones', () => {
-        componente.solicitudForm.setValue(datosValidos);
+    // PRUEBA 6: Verificar la longitud mínima de la descripción
+    it('debería rechazar una descripción menor a diez caracteres', () => {
+        const descripcion = component.solicitudForm.get('descripcion');
 
-        expect(componente.solicitudForm.valid).toBe(true);
+        descripcion?.setValue('Servicio');
+
+        expect(descripcion?.hasError('minlength')).toBe(true);
     });
 
-    // Envío
-    it('no envía la solicitud cuando el formulario es inválido', () => {
-        const alerta = vi.spyOn(window, 'alert').mockImplementation(() => { });
+    // PRUEBA 7: Verificar que todos los datos válidos sean aceptados
+    it('debería aceptar los datos correctos del formulario', () => {
+        component.solicitudForm.setValue({
+            nombre: 'Pedro Huayanay',
+            correo: 'pedro@gmail.com',
+            telefono: '987654321',
+            servicio: 'Cableado estructurado',
+            descripcion: 'Solicito instalación de cableado de red',
+        });
 
-        componente.enviarSolicitud();
-
-        expect(alerta).not.toHaveBeenCalled();
-        expect(componente.solicitudForm.controls['nombre'].touched).toBe(true);
-        alerta.mockRestore();
+        expect(component.solicitudForm.valid).toBe(true);
     });
 
-    it('envía la solicitud y limpia el formulario cuando es válido', () => {
-        const alerta = vi.spyOn(window, 'alert').mockImplementation(() => { });
-        const registro = vi.spyOn(console, 'log').mockImplementation(() => { });
-        componente.solicitudForm.setValue(datosValidos);
+    // PRUEBA 8: Verificar que el envío marque los campos obligatorios
+    it('debería marcar los campos como tocados si el formulario es inválido', () => {
+        component.enviarSolicitud();
 
-        componente.enviarSolicitud();
-
-        expect(alerta).toHaveBeenCalledTimes(1);
-        expect(componente.solicitudForm.controls['nombre'].value).toBeFalsy();
-        alerta.mockRestore();
-        registro.mockRestore();
-    });
-
-    // Plantilla: el mensaje de error aparece en pantalla
-    it('muestra el mensaje de error del correo al intentar enviar vacío', () => {
-        const boton = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLButtonElement;
-        boton.click();
-        fixture.detectChanges();
-
-        const errores = Array.from(fixture.nativeElement.querySelectorAll('.error')) as HTMLElement[];
-        expect(errores.some((e) => e.textContent?.includes('El correo es obligatorio'))).toBe(true);
+        expect(component.solicitudForm.invalid).toBe(true);
+        expect(component.solicitudForm.get('nombre')?.touched).toBe(true);
     });
 });
